@@ -1,0 +1,88 @@
+# Public AI-Toolkit example config for FLUX2DEV LoRA training.
+# This file is based on one working local experiment and is sanitized for public use.
+# It is not a universal recipe: tune values for your GPU, dataset, target style and stability.
+
+job: "extension"
+
+config:
+  name: "flux2dev_lora_example"
+
+  process:
+    - type: "diffusion_trainer"
+      device: "cuda"
+      trigger_word: "example_trigger"
+      training_folder: "./output"
+      performance_log_every: 10
+
+      network:
+        type: "lora"
+        linear: 16
+        linear_alpha: 16
+        conv: 0
+        conv_alpha: 0
+        lokr_full_rank: false
+        lokr_factor: -1
+
+      save:
+        dtype: "bf16"
+        save_every: 250
+        max_step_saves_to_keep: 5
+        save_format: "diffusers"
+        push_to_hub: false
+
+      datasets:
+        - folder_path: "./datasets/example-target"
+          caption_ext: "txt"
+          default_caption: ""
+          resolution:
+            - 768
+          num_repeats: 10
+          flip_x: true
+          flip_y: false
+          cache_latents_to_disk: true
+
+      train:
+        batch_size: 1
+        steps: 1800
+        gradient_accumulation: 1
+        gradient_checkpointing: true
+        train_unet: true
+        train_text_encoder: false
+        optimizer: "adamw8bit"
+        lr: 0.0001
+        noise_scheduler: "flowmatch"
+        cache_text_embeddings: true
+        diff_output_preservation: true
+        dtype: "bf16"
+
+      logging:
+        log_every: 1
+        use_ui_logger: true
+
+      model:
+        name_or_path: "black-forest-labs/FLUX.2-dev"
+        arch: "flux2"
+        quantize: true
+        quantize_te: true
+        low_vram: true
+        layer_offloading: true
+        layer_offloading_text_encoder_percent: 1
+        layer_offloading_transformer_percent: 1
+
+      sample:
+        sampler: "flowmatch"
+        sample_every: 250
+        width: 768
+        height: 768
+        guidance_scale: 1
+        sample_steps: 20
+        seed: 42
+        samples:
+          - prompt: "portrait photo of example_trigger, cinematic lighting, realistic skin detail"
+          - prompt: "full body photo of example_trigger standing in a city street at night"
+          - prompt: "close-up portrait of example_trigger, soft studio lighting"
+          - prompt: "example_trigger in a dark fantasy atmosphere"
+
+meta:
+  version: "1.0"
+  note: "Sanitized public example. Replace trigger words, dataset path and prompts for your own experiment."

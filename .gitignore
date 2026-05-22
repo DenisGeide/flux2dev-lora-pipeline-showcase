@@ -1,0 +1,33 @@
+# Local/private notes
+private/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Large/private model artifacts
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.gguf
+
+# Generated outputs that may be large/private
+outputs/
+tmp/
+cache/
+
+# Environment/secrets
+.env
+.env.*
+*.key
+*.pem
+*.secret

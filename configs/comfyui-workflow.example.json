@@ -1,0 +1,27 @@
+{
+  "note": "Public descriptor for the adapted FLUX2DEV ComfyUI workflow.",
+  "status": "sanitized descriptor; replace with a full ComfyUI export only if it contains no private paths",
+  "public_safety": {
+    "remove_private_paths": true,
+    "remove_usernames": true,
+    "remove_non_public_model_urls": true,
+    "do_not_include_paid_model_files": true
+  },
+  "expected_components": {
+    "base_model": "flux2_dev.safetensors",
+    "vae": "flux2_vae.safetensors",
+    "text_encoders": [
+      "mistral_3.1_small_flux2_fp8.safetensors"
+    ],
+    "main_blocks": [
+      "Load FLUX2DEV model",
+      "Load text encoders",
+      "Prompt encoding",
+      "Guidance / CFG",
+      "Scheduler",
+      "Sampler",
+      "VAE decode",
+      "Save image"
+    ]
+  }
+}
