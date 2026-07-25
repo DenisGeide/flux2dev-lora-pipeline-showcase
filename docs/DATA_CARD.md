@@ -2,10 +2,10 @@
 
 ## Public release scope
 
-No historical source photograph, private caption, cached latent, or EXIF record
-is distributed by this repository. Public SVGs are repo-native explanatory
-diagrams made from text and geometric shapes; they are not source photographs,
-generated results, or a downloadable training corpus.
+No raw historical dataset, cached latent, or EXIF archive is distributed by
+this repository. The original dataset contact-sheet screenshot and one caption
+example are included as project documentation; they are not a downloadable
+training corpus. Selected generated result previews are documented separately.
 
 The repository publishes:
 
@@ -14,6 +14,7 @@ The repository publishes:
 - a synthetic two-record manifest example;
 - validation tooling;
 - strict public-release and personal-data gates;
+- the original dataset-preview and caption-example screenshots;
 - preparation and rights-review guidance.
 
 ## Historical aggregate

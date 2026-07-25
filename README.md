@@ -10,16 +10,16 @@ ComfyUI evaluation.**
 This repository turns a private local training workspace into a safe public
 engineering case study. It includes sanitized configurations, an auditable
 experiment registry, dataset-manifest tooling, a path-free log parser,
-reproducibility notes, failure modes, and repo-native illustrative diagrams.
+reproducibility notes, failure modes, and the original project screenshots.
 
 > The trainer is [`ostris/ai-toolkit`](https://github.com/ostris/ai-toolkit);
 > this repository does not claim that third-party training loop as original
-> code. Base models, source photographs, captions, LoRA weights, cached latents,
-> optimizer states, raw logs, generated images, and secrets are not distributed.
-> Every workflow/result diagram is explicitly illustrative and is not a model
-> output or a private workflow export.
+> code. Base models, LoRA weights, cached latents, optimizer states, raw
+> datasets, complete raw logs, and secrets are not distributed. The screenshots
+> and selected result previews below are the original project assets and are
+> preserved unchanged.
 
-![Sanitized illustrative pipeline](screenshots/pipeline-overview-illustrative.svg)
+![Original base FLUX2DEV and trained LoRA comparison](screenshots/before-after-base-vs-lora.jpg)
 
 ## What this demonstrates
 
@@ -163,6 +163,20 @@ The output contains status, progress, loss summary, median speed, checkpoint
 event counts, and OOM detection. It contains no raw lines, local paths, prompts,
 trigger words, or filenames.
 
+## Original training and dataset evidence
+
+The following screenshots are the original files from the local project. They
+show the training configuration, the running workstation, the dataset layout,
+and a caption sidecar example.
+
+![Original AI-Toolkit training configuration](screenshots/training-config.png)
+
+![Original local training run](screenshots/training-logs.png)
+
+![Original dataset preview](screenshots/dataset-preview.png)
+
+![Original caption sidecar example](screenshots/caption-example.png)
+
 ## Historical runs are not an ablation
 
 Dataset size, target, rank, learning rate, repeats, resolution, quantization,
@@ -181,15 +195,24 @@ For a controlled comparison:
 Use [`configs/controlled-study.example.yml`](configs/controlled-study.example.yml)
 to record that protocol.
 
+## Selected visual results
+
+These original result samples provide qualitative context for the project. They
+are not presented as a controlled ablation or as proof that one setting is
+universally better.
+
+![Original FLUX2DEV LoRA result samples](screenshots/final-results-grid.jpg)
+
 ## Inference workflow
 
 ComfyUI was used to load the base model, inject adapters, keep validation
 prompts/seeds repeatable, and compare checkpoints.
 
-![Sanitized illustrative ComfyUI workflow](screenshots/comfyui-workflow-illustrative.svg)
+![Original ComfyUI workflow overview](screenshots/comfyui-workflow-overview.png)
 
-The SVG above is a generic, repo-native explanation of the inference path. It
-is not a private ComfyUI export and it contains no prompts or generated images.
+Detailed workflow screenshot:
+
+![Original detailed ComfyUI workflow](screenshots/comfyui-workflow-annotated.png)
 
 The workstation used for the audited local experiments:
 
@@ -203,6 +226,10 @@ The workstation used for the audited local experiments:
 | Inference runtime | ComfyUI |
 
 This is the observed environment, not a minimum requirement.
+
+![Original workstation hardware overview](screenshots/hardware-overview-sanitized.png)
+
+![Original local model-file setup](screenshots/model-files.png)
 
 ## Repository map
 
@@ -254,18 +281,17 @@ Included:
 - original documentation and public scripts;
 - sanitized YAML/JSON examples;
 - aggregate evidence and machine-readable run metadata;
-- sanitized, illustrative SVG diagrams;
-- the retained `model-files.png` setup screenshot, which contains no local path
-  or generated content.
+- the original workstation, model-file, ComfyUI, training, and dataset
+  screenshots, restored byte-for-byte;
+- the original base/LoRA comparison and result preview grid.
 
 Excluded by `.gitignore` and release policy:
 
-- source photographs and private captions;
+- raw source datasets and the complete caption corpus;
 - `.safetensors`, `.ckpt`, `.pt`, `.pth`, `.bin`, and `.gguf`;
 - cached latents and optimizer states;
-- raw outputs and raw training logs;
-- generated validation images and comparison grids;
-- tokens, `.env` files, local databases, and machine-specific paths;
+- full raw output directories and complete raw training logs;
+- tokens, `.env` files, local databases, and unreviewed private files;
 - third-party base model files.
 
 ## Attribution and licenses

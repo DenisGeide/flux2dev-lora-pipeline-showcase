@@ -19,6 +19,8 @@ The purpose of this page is to help readers understand the hardware constraints 
 These values were re-checked on `2026-07-25`. They describe the experiment
 workstation, not a minimum requirement.
 
+![Original workstation hardware overview](../screenshots/hardware-overview-sanitized.png)
+
 ## Software Environment
 
 | Component | Value |

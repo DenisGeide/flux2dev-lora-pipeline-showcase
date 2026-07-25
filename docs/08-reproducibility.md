@@ -2,8 +2,8 @@
 
 This repository does not vendor a trainer or model weights. It provides
 sanitized AI-Toolkit configs, a dataset manifest contract, log parsing, an
-experiment registry, and illustrative evaluation diagrams. You supply licensed
-data and obtain model access from the model publisher.
+experiment registry, and the original project screenshots and result previews.
+You supply licensed data and obtain model access from the model publisher.
 
 ## 1. Record the environment
 

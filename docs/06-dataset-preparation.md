@@ -100,11 +100,15 @@ Before training, the dataset was checked for:
 - no private/copyright-sensitive files in the public examples;
 - no local metadata that should remain private.
 
-![Sanitized illustrative image-caption pairing](../screenshots/dataset-pairing-illustrative.svg)
+![Original dataset preview](../screenshots/dataset-preview.png)
 
-The SVG is a repo-native schematic made from geometric shapes and synthetic
-labels. It does not show a source photograph, a real caption, or a generated
-model output.
+Caption sidecar example:
+
+![Original caption example](../screenshots/caption-example.png)
+
+These are the unchanged documentation screenshots from the original project.
+The repository does not include the raw training-image directory or complete
+caption corpus.
 
 ## Manifest and validation
 

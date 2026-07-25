@@ -1,8 +1,11 @@
 # Dataset manifests
 
-The historical source photographs and captions are **not** stored in this
-repository. This folder provides a portable manifest format so another user can
-prepare a compatible, licensed dataset without inheriting private paths or data.
+The raw historical source photographs and complete caption corpus are **not**
+stored in this repository. The original dataset contact-sheet screenshot and
+one caption screenshot are retained under [`screenshots/`](../screenshots/) as
+project documentation. This folder provides a portable manifest format so
+another user can prepare a compatible, licensed dataset without inheriting the
+private raw dataset.
 
 ## Expected layout
 

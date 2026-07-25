@@ -49,18 +49,30 @@ class ExperimentRegistryTests(unittest.TestCase):
         for value in forbidden:
             self.assertNotIn(value, serialized)
 
-    def test_public_visuals_are_repo_native_illustrations(self) -> None:
+    def test_public_visuals_are_original_project_assets(self) -> None:
         visuals = self.registry["public_visuals"]
-        self.assertFalse(visuals["model_outputs_included"])
-        self.assertEqual(visuals["kind"], "sanitized_repo_native_illustrations")
-        self.assertEqual(len(visuals["artifacts"]), 5)
+        self.assertTrue(visuals["model_outputs_included"])
+        self.assertEqual(visuals["kind"], "original_project_screenshots_and_previews")
+        self.assertEqual(
+            set(visuals["artifacts"]),
+            {
+                "screenshots/hardware-overview-sanitized.png",
+                "screenshots/model-files.png",
+                "screenshots/comfyui-workflow-overview.png",
+                "screenshots/comfyui-workflow-annotated.png",
+                "screenshots/training-config.png",
+                "screenshots/training-logs.png",
+                "screenshots/dataset-preview.png",
+                "screenshots/caption-example.png",
+                "screenshots/before-after-base-vs-lora.jpg",
+                "screenshots/final-results-grid.jpg",
+            },
+        )
         for relative in visuals["artifacts"]:
-            self.assertTrue(relative.endswith("-illustrative.svg"))
             path = ROOT / relative
             self.assertTrue(path.is_file(), relative)
-            content = path.read_text(encoding="utf-8")
-            self.assertIn("SANITIZED ILLUSTRATION", content)
-            self.assertNotIn("<image", content.lower())
+            self.assertIn(path.suffix.lower(), {".png", ".jpg"})
+            self.assertNotIn("-illustrative", path.name)
 
     def test_checked_in_report_is_generated_from_registry(self) -> None:
         checked_in = (ROOT / "experiments" / "README.md").read_text(encoding="utf-8")

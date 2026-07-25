@@ -49,6 +49,12 @@ is not reconstructed. This is recorded as a data-quality limitation.
 See [`experiments/README.md`](../experiments/README.md) for every run and the
 conservative status rules.
 
+## Original project screenshots
+
+![Original AI-Toolkit training configuration](../screenshots/training-config.png)
+
+![Original local training run](../screenshots/training-logs.png)
+
 ## Pipeline
 
 ```mermaid
@@ -111,8 +117,9 @@ quality metric. Compare checkpoints with:
 - visible artifacts;
 - blinded review when making a comparative claim.
 
-The repository does not distribute the historical generated images. Its SVGs
-are illustrative protocol diagrams only. Future experiments should use
+The repository includes the original public result preview sheets for
+qualitative context. They are not a controlled matched-seed benchmark. Future
+experiments should use
 [`configs/controlled-study.example.yml`](../configs/controlled-study.example.yml)
 before using the term “ablation”.
 
@@ -120,10 +127,10 @@ before using the term “ablation”.
 
 - base-model files;
 - LoRA weights and optimizer states;
-- source photographs and private captions;
+- raw source datasets and the complete caption corpus;
 - cached latents;
-- raw logs containing paths/identifiers;
-- generated images without explicit release rights and complete run metadata;
+- complete raw logs and full output directories;
+- any additional generated images without explicit release rights;
 - tokens, local databases, and machine-specific state.
 
 See the [model card](MODEL_CARD.md), [data card](DATA_CARD.md), and

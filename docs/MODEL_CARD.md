@@ -14,6 +14,7 @@ It does not distribute a base model or LoRA weights.
 | ComfyUI | third-party inference workflow runtime | no |
 | sanitized configs | reproducibility reference | yes |
 | experiment registry and report tools | public evidence layer | yes |
+| original project screenshots and result previews | qualitative documentation | yes |
 | historical LoRA checkpoints | private experiment artifacts | no |
 
 ## Intended use
@@ -44,8 +45,8 @@ failures, and one folder with mixed attempt evidence. Exact records are in the
 
 Historical visual assessment considered prompt adherence, subject consistency,
 detail retention, texture, and artifacts. It was not blinded or statistically
-controlled, and those generated images are not distributed. Future evaluation
-should use:
+controlled. The original public comparison and result grid are included as
+qualitative examples, not as a benchmark. Future evaluation should use:
 
 - fixed prompts and seeds;
 - held-out compositions;
@@ -56,9 +57,10 @@ should use:
 
 ## Limitations
 
-- The public SVGs are illustrative diagrams, not qualitative model examples.
-- Historical generated images remain local because release rights and exact
-  run-to-image provenance were not retained at the required level.
+- The selected public previews are qualitative project artifacts, not a
+  controlled benchmark.
+- Full output directories remain local, and the exact run-to-image provenance
+  for every published preview was not retained.
 - Training loss is not a perceptual quality metric.
 - Exact reproduction depends on model access, third-party versions, hardware,
   and non-deterministic GPU behavior.

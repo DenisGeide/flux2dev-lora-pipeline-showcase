@@ -38,12 +38,13 @@ with the terms attached to the exact model/version you use.
 - dataset manifest schema and validator;
 - reproducibility and failure-analysis documentation;
 - adapted ComfyUI workflow documentation;
-- original sanitized SVG diagrams that explain the workflow and evaluation
-  protocol without reproducing private outputs.
+- the author-supplied original workflow, training, dataset, hardware, and result
+  screenshots restored from the initial project.
 
 ## Repository license
 
 The original code, documentation, and examples in this repository are released
 under [`LICENSE`](../LICENSE). That license does not relicense third-party
-models, training data, AI-Toolkit, ComfyUI, the retained third-party file-name
-screenshot, or privately held LoRA adapters and generated images.
+models, training data, AI-Toolkit, ComfyUI, trademarks visible in screenshots,
+or privately held LoRA adapters and files that are not included in this
+repository.

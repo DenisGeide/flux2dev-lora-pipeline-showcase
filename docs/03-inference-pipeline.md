@@ -17,15 +17,14 @@ flowchart LR
     VAE --> Output["Save Image"]
 ```
 
-![Sanitized illustrative ComfyUI workflow](../screenshots/comfyui-workflow-illustrative.svg)
+![Original ComfyUI workflow overview](../screenshots/comfyui-workflow-overview.png)
 
-Experiment-level context:
+Detailed local graph:
 
-![Sanitized illustrative experiment pipeline](../screenshots/pipeline-overview-illustrative.svg)
+![Original detailed ComfyUI workflow](../screenshots/comfyui-workflow-annotated.png)
 
-Both SVGs are repo-native explanatory diagrams. They are not exports of the
-private workflow and are not generated model images. They highlight the
-following generic parts of the local generation pipeline:
+These are the original project screenshots, not replacement diagrams. They
+show the following parts of the local generation pipeline:
 
 - model loading;
 - text encoder block;

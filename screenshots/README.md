@@ -1,23 +1,32 @@
-# Public visual assets
+# Screenshots
 
-This folder contains one retained sanitized setup screenshot and five
-repo-native SVG diagrams:
+This folder contains the original screenshots and result previews used by the
+README and documentation. They are preserved unchanged from the initial public
+project.
+
+## Complete set
 
 ```text
+hardware-overview-sanitized.png
 model-files.png
-pipeline-overview-illustrative.svg
-dataset-pairing-illustrative.svg
-comfyui-workflow-illustrative.svg
-fixed-seed-evaluation-illustrative.svg
-evidence-status-illustrative.svg
+comfyui-workflow-overview.png
+comfyui-workflow-annotated.png
+training-config.png
+training-logs.png
+dataset-preview.png
+caption-example.png
+before-after-base-vs-lora.jpg
+final-results-grid.jpg
 ```
 
-Every SVG embeds an `illustrative`/`sanitized` notice and uses only text,
-shapes, and generic synthetic labels. The SVGs are not model outputs, source
-photographs, real captions, or private ComfyUI exports.
+## Fast preview set
 
-Historical hardware, training, dataset, workflow, and output screenshots were
-removed because they could expose device information, local paths, target
-identity, prompts, source-photo rights, or unclear output provenance. Public
-metrics now come from the sanitized experiment registry and path-free log
-parser.
+```text
+comfyui-workflow-overview.png
+before-after-base-vs-lora.jpg
+final-results-grid.jpg
+```
+
+These three files show the workflow complexity, the engineering purpose, and
+the final visual result most quickly. The generated SVG replacements were
+removed; none of the original screenshots above was redrawn or edited.

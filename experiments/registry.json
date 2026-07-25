@@ -3,7 +3,7 @@
   "scope": {
     "kind": "historical_observational_audit",
     "controlled_ablation": false,
-    "privacy": "Run IDs and dataset IDs are sanitized. No personal target names, prompts, local paths, source images, weights, optimizer states, or raw logs are included."
+    "privacy": "Run IDs and dataset IDs in the machine-readable records are sanitized. Original project screenshots are included unchanged; raw datasets, weights, optimizer states, complete logs, secrets, and full output directories are not included."
   },
   "source_audit": {
     "audited_at": "2026-07-25",
@@ -27,15 +27,20 @@
   },
   "public_visuals": {
     "artifacts": [
-      "screenshots/pipeline-overview-illustrative.svg",
-      "screenshots/dataset-pairing-illustrative.svg",
-      "screenshots/comfyui-workflow-illustrative.svg",
-      "screenshots/fixed-seed-evaluation-illustrative.svg",
-      "screenshots/evidence-status-illustrative.svg"
+      "screenshots/hardware-overview-sanitized.png",
+      "screenshots/model-files.png",
+      "screenshots/comfyui-workflow-overview.png",
+      "screenshots/comfyui-workflow-annotated.png",
+      "screenshots/training-config.png",
+      "screenshots/training-logs.png",
+      "screenshots/dataset-preview.png",
+      "screenshots/caption-example.png",
+      "screenshots/before-after-base-vs-lora.jpg",
+      "screenshots/final-results-grid.jpg"
     ],
-    "kind": "sanitized_repo_native_illustrations",
-    "model_outputs_included": false,
-    "provenance": "Original SVG diagrams made from text and geometric shapes for this repository. They explain the process and evidence rules; they are not source photographs, private workflow exports, real captions, or generated model outputs."
+    "kind": "original_project_screenshots_and_previews",
+    "model_outputs_included": true,
+    "provenance": "Author-supplied screenshots restored byte-for-byte from the initial project. They include local UI/workflow, hardware/model setup, training/dataset documentation, and two selected generated-output preview sheets. Raw datasets, model weights, complete logs, and full output directories are not included."
   },
   "runs": [
     {

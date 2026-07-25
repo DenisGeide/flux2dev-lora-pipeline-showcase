@@ -101,7 +101,8 @@ After tuning, the pipeline became more stable for:
 ## Technical Evidence
 
 Sanitized run status and failure stages are published in the
-[experiment registry](../experiments/README.md). Raw training logs remain local
-because they contain paths and private identifiers. Historical generated
-images also remain local; [07-results.md](07-results.md) documents the
-fixed-seed evaluation and release protocol with illustrative diagrams.
+[experiment registry](../experiments/README.md). Full raw logs and output
+directories remain local, while the original training screenshot and selected
+result preview sheets are included in this repository.
+[07-results.md](07-results.md) explains their qualitative scope and the
+controlled-evaluation protocol for future runs.
