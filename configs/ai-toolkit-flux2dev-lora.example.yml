@@ -1,6 +1,8 @@
 # Public AI-Toolkit example config for FLUX2DEV LoRA training.
-# This file is based on one working local experiment and is sanitized for public use.
-# It is not a universal recipe: tune values for your GPU, dataset, target style and stability.
+# This file is a sanitized public baseline informed by historical FLUX.2 attempts.
+# The local audit does not contain an unambiguous completed FLUX.2 log, so this
+# file must not be presented as a proven universal recipe. Start with a smoke run.
+# AI-Toolkit schema can change; verify it against the revision you install.
 
 job: "extension"
 
@@ -10,7 +12,7 @@ config:
   process:
     - type: "diffusion_trainer"
       device: "cuda"
-      trigger_word: "example_trigger"
+      trigger_word: "synthetic_object_token"
       training_folder: "./output"
       performance_log_every: 10
 
@@ -31,7 +33,7 @@ config:
         push_to_hub: false
 
       datasets:
-        - folder_path: "./datasets/example-target"
+        - folder_path: "./datasets/synthetic-object"
           caption_ext: "txt"
           default_caption: ""
           resolution:
@@ -52,7 +54,7 @@ config:
         lr: 0.0001
         noise_scheduler: "flowmatch"
         cache_text_embeddings: true
-        diff_output_preservation: true
+        diff_output_preservation: false
         dtype: "bf16"
 
       logging:
@@ -78,11 +80,12 @@ config:
         sample_steps: 20
         seed: 42
         samples:
-          - prompt: "portrait photo of example_trigger, cinematic lighting, realistic skin detail"
-          - prompt: "full body photo of example_trigger standing in a city street at night"
-          - prompt: "close-up portrait of example_trigger, soft studio lighting"
-          - prompt: "example_trigger in a dark fantasy atmosphere"
+          - prompt: "synthetic_object_token, abstract ceramic object, neutral studio background"
+          - prompt: "synthetic_object_token, geometric installation, soft directional light"
+          - prompt: "synthetic_object_token, product study, clean white background"
+          - prompt: "synthetic_object_token, stylized sculpture, high-contrast lighting"
 
 meta:
   version: "1.0"
-  note: "Sanitized public example. Replace trigger words, dataset path and prompts for your own experiment."
+  provenance: "Sanitized baseline informed by historical observational configs; not a controlled result."
+  note: "Replace the synthetic token, dataset path, and prompt IDs locally. Run a short smoke test before committing to 1800 steps."

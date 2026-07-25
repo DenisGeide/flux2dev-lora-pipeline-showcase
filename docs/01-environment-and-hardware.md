@@ -1,6 +1,6 @@
 # Environment And Hardware
 
-This document describes the local environment used for FLUX2DEV inference and LoRA training.
+This document describes the local environment audited for FLUX.1/FLUX.2 inference and LoRA training.
 
 The purpose of this page is to help readers understand the hardware constraints behind the project. FLUX2DEV and LoRA training are heavy workloads, so the environment matters as much as the model configuration.
 
@@ -10,14 +10,14 @@ The purpose of this page is to help readers understand the hardware constraints 
 |---|---|
 | CPU | AMD Ryzen 9 9950X3D |
 | RAM | 128 GB |
-| VRAM | 33 GB |
-| OS | Windows 11 LTSC 24H2 |
+| GPU | NVIDIA GeForce RTX 5090 |
+| VRAM | 32607 MiB reported by `nvidia-smi` |
+| OS | Windows 11 Enterprise LTSC, build 26100 |
 | Runtime | ComfyUI |
 | Training framework | AI-Toolkit |
 
-![Hardware overview](../screenshots/hardware-overview-sanitized.png)
-
-The screenshot is sanitized and used only to show the hardware class used for the local experiments.
+These values were re-checked on `2026-07-25`. They describe the experiment
+workstation, not a minimum requirement.
 
 ## Software Environment
 
@@ -26,11 +26,12 @@ The screenshot is sanitized and used only to show the hardware class used for th
 | Runtime | [ComfyUI](https://github.com/comfy-org/ComfyUI) |
 | Documentation | [ComfyUI docs](https://docs.comfy.org/) |
 | Launch method | `run_nvidia_gpu.bat` |
-| Base model | `flux2_dev.safetensors` |
-| VAE | `flux2_vae.safetensors` |
+| Base-model families observed | FLUX.1-dev and FLUX.2-dev |
 | LoRA training | [AI-Toolkit](https://github.com/ostris/ai-toolkit) |
 
-Exact Python/CUDA/PyTorch/ComfyUI/AI-Toolkit versions can change over time, so this showcase documents the hardware class, workflow structure and config strategy instead of locking the project to one machine-specific dependency snapshot.
+The audited AI-Toolkit checkout was at revision
+`35b1cde3cb7b0151a51bf8547bab0931fd57d72d`. Python/CUDA/PyTorch/ComfyUI
+versions can change, so every new run should capture its own environment.
 
 For a production reproduction attempt, record the local versions before running experiments:
 

@@ -1,0 +1,96 @@
+# Reproducible public baseline for FLUX.1-dev LoRA training with ostris/ai-toolkit.
+# Based on the shape of completed historical run hist-flux1-001.
+# Paths, trigger token, prompts, and target identity are sanitized.
+# Verify this file against your installed AI-Toolkit revision before a long run.
+
+job: extension
+
+config:
+  name: flux1dev_public_baseline
+
+  process:
+    - type: diffusion_trainer
+      device: cuda
+      trigger_word: synthetic_object_token
+      training_folder: ./output
+      performance_log_every: 10
+
+      network:
+        type: lora
+        linear: 32
+        linear_alpha: 32
+        conv: 16
+        conv_alpha: 16
+        lokr_full_rank: true
+        lokr_factor: -1
+
+      save:
+        dtype: bf16
+        save_every: 250
+        max_step_saves_to_keep: 4
+        save_format: diffusers
+        push_to_hub: false
+
+      datasets:
+        - folder_path: ./datasets/synthetic-object
+          caption_ext: txt
+          default_caption: ""
+          caption_dropout_rate: 0.05
+          resolution:
+            - 768
+            - 1024
+          num_repeats: 10
+          flip_x: false
+          flip_y: false
+          cache_latents_to_disk: true
+
+      train:
+        batch_size: 1
+        steps: 2250
+        gradient_accumulation: 1
+        gradient_checkpointing: true
+        train_unet: true
+        train_text_encoder: false
+        optimizer: adamw8bit
+        optimizer_params:
+          weight_decay: 0.0001
+        lr: 0.0004
+        noise_scheduler: flowmatch
+        timestep_type: sigmoid
+        content_or_style: balanced
+        cache_text_embeddings: true
+        dtype: bf16
+        loss_type: mse
+
+      logging:
+        log_every: 1
+        use_ui_logger: true
+
+      model:
+        name_or_path: black-forest-labs/FLUX.1-dev
+        arch: flux
+        quantize: true
+        qtype: qfloat8
+        quantize_te: true
+        qtype_te: qfloat8
+        low_vram: false
+
+      sample:
+        sampler: flowmatch
+        sample_every: 200
+        width: 1024
+        height: 1024
+        guidance_scale: 4
+        sample_steps: 25
+        seed: 42
+        walk_seed: false
+        samples:
+          - prompt: "synthetic_object_token, abstract ceramic object, neutral studio background"
+          - prompt: "synthetic_object_token, geometric installation, soft daylight"
+          - prompt: "synthetic_object_token, product study, detailed surface lighting"
+          - prompt: "synthetic_object_token, stylized sculpture, indoor gallery scene"
+
+meta:
+  version: "1.0"
+  provenance: "Sanitized public baseline derived from hist-flux1-001; not a byte-for-byte private config."
+  controlled_change: "walk_seed is disabled so the validation suite remains comparable across runs."

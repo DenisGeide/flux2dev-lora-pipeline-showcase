@@ -1,5 +1,9 @@
 # Local/private notes
 private/
+data/private/
+datasets/
+raw-logs/
+reports/private/
 
 # OS/editor files
 .DS_Store
@@ -11,6 +15,8 @@ Thumbs.db
 __pycache__/
 *.pyc
 .pytest_cache/
+.coverage
+htmlcov/
 
 # Large/private model artifacts
 *.safetensors
@@ -21,9 +27,14 @@ __pycache__/
 *.gguf
 
 # Generated outputs that may be large/private
+.artifacts/
 outputs/
 tmp/
 cache/
+wandb/
+mlruns/
+_latent_cache/
+_te_cache/
 
 # Environment/secrets
 .env
@@ -31,3 +42,10 @@ cache/
 *.key
 *.pem
 *.secret
+
+# Local experiment state
+*.db
+*.db-shm
+*.db-wal
+optimizer*.pt
+environment.lock.txt

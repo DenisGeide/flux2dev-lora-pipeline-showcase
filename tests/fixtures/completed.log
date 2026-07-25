@@ -1,0 +1,5 @@
+example:   0%|          | 0/3 [00:02<00:08,  2.50s/it, lr: 1.0e-04 loss: 5.000e-01]
+example:  33%|###3      | 1/3 [00:05<00:05,  2.60s/it, lr: 1.0e-04 loss: 4.000e-01]
+example:  67%|######6   | 2/3 [00:08<00:02,  2.70s/it, lr: 1.0e-04 loss: 3.000e-01]
+example:  67%|######6   | 2/3 [00:08<00:02,  2.70s/it, lr: 1.0e-04 loss: 3.000e-01]
+Saved checkpoint to C:\private\output\example.safetensors

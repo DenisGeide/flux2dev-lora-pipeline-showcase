@@ -100,8 +100,8 @@ After tuning, the pipeline became more stable for:
 
 ## Technical Evidence
 
-Training log capture:
-
-![Training logs](../screenshots/training-logs.png)
-
-The final results and before/after comparison are shown in [07-results.md](07-results.md).
+Sanitized run status and failure stages are published in the
+[experiment registry](../experiments/README.md). Raw training logs remain local
+because they contain paths and private identifiers. Historical generated
+images also remain local; [07-results.md](07-results.md) documents the
+fixed-seed evaluation and release protocol with illustrative diagrams.

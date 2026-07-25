@@ -1,69 +1,60 @@
-# Public example config for the FLUX2DEV LoRA training workflow.
-# This is a sanitized reference based on one working local experiment.
-# Private local paths, paid model URLs, secrets and personal data are intentionally omitted.
+# Human-readable experiment metadata.
+# This file is documentation and is NOT consumed by AI-Toolkit.
+# Use one of the ai-toolkit-*.example.yml files for actual training.
 
-project:
-  name: flux2dev-lora-showcase
-  base_model: black-forest-labs/FLUX.2-dev
-  training_framework: AI-Toolkit
+experiment:
+  id: public-run-001
+  status: planned
+  hypothesis: "Write one falsifiable statement before training."
+  controlled_ablation: false
 
-dataset:
-  size: "20-35 images"
-  path: "datasets/example-target"
-  captions: "txt files"
-  trigger_word: "example_trigger"
-  resolution: 768
-  num_repeats: 10
-  flip_x: true
-  flip_y: false
-  cache_latents_to_disk: true
+provenance:
+  trainer: ostris/ai-toolkit
+  trainer_revision: "record-git-commit-here"
+  base_model: black-forest-labs/FLUX.1-dev
+  dataset_manifest: path/to/manifest.json
+  dataset_version: "1.0.0"
+  config_file: configs/ai-toolkit-flux1dev-lora.example.yml
+
+environment:
+  gpu: "record-model"
+  driver: "record-version"
+  python: "record-version"
+  torch: "record-version"
 
 training:
-  duration: "6-7 hours"
-  lora_type: lora
-  rank: 16
-  alpha: 16
-  conv: 0
-  conv_alpha: 0
+  seed: 42
+  steps: 2250
+  lora_rank: 32
+  lora_alpha: 32
   optimizer: adamw8bit
-  learning_rate: 0.0001
+  learning_rate: 0.0004
   batch_size: 1
   gradient_accumulation: 1
-  gradient_checkpointing: true
-  steps: 1800
-  train_unet: true
-  train_text_encoder: false
   dtype: bf16
-  noise_scheduler: flowmatch
-  cache_text_embeddings: true
-  diff_output_preservation: true
+  gradient_checkpointing: true
 
-memory:
-  main_issue: "VRAM pressure / OOM"
-  stabilization:
-    - custom training config
-    - memory balancing
-    - offloading where applicable
-    - FP8-related optimization where applicable
+evaluation:
+  validation_prompt_set: "versioned/fixed"
+  validation_seeds:
+    - 101
+    - 202
+    - 303
+  record:
+    - final_status
+    - loss_curve
+    - wall_clock_seconds
+    - median_seconds_per_iteration
+    - peak_vram_mib
+    - checkpoint_size_bytes
+    - validation_outputs
+    - failure_stage
 
-model:
-  arch: flux2
-  quantize: true
-  quantize_text_encoder: true
-  low_vram: true
-  layer_offloading: true
-
-sampling:
-  sampler: flowmatch
-  sample_every: 250
-  width: 768
-  height: 768
-  guidance_scale: 1
-  sample_steps: 20
-  seed: 42
-
-release_scope:
+release:
+  include_config: true
+  include_sanitized_report: true
+  include_raw_log: false
+  include_dataset: false
   include_lora_weights: false
-  include_private_dataset: false
-  include_paid_model_files: false
+  include_optimizer_state: false
   include_private_paths: false

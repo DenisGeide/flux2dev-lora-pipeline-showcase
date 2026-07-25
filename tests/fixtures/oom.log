@@ -1,0 +1,3 @@
+Loading Flux2 model
+Quantizing Transformer
+Error running job: CUDA error: out of memory

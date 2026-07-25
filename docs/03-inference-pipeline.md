@@ -17,13 +17,15 @@ flowchart LR
     VAE --> Output["Save Image"]
 ```
 
-![ComfyUI workflow overview](../screenshots/comfyui-workflow-overview.png)
+![Sanitized illustrative ComfyUI workflow](../screenshots/comfyui-workflow-illustrative.svg)
 
-Annotated version:
+Experiment-level context:
 
-![ComfyUI workflow annotated](../screenshots/comfyui-workflow-annotated.png)
+![Sanitized illustrative experiment pipeline](../screenshots/pipeline-overview-illustrative.svg)
 
-The annotated workflow highlights the main parts of the local generation pipeline:
+Both SVGs are repo-native explanatory diagrams. They are not exports of the
+private workflow and are not generated model images. They highlight the
+following generic parts of the local generation pipeline:
 
 - model loading;
 - text encoder block;
@@ -60,13 +62,15 @@ Areas tuned during experiments:
 - guidance value;
 - LoRA trigger words when LoRA was used.
 
-Safe example prompt shape:
+Safe synthetic prompt shape:
 
 ```text
-example_trigger, cinematic portrait, soft light, realistic detail, clean background
+synthetic_object, abstract geometry, neutral background, clean composition
 ```
 
-The exact prompt changes per experiment. The important part is keeping the trigger word, subject description and quality/style terms consistent enough to compare base FLUX2DEV output against LoRA output.
+The real prompts remain private. The important part is keeping a versioned
+prompt ID, target description, and quality/style terms consistent enough to
+compare base FLUX2DEV output against LoRA output.
 
 ## Sampler And Scheduler
 

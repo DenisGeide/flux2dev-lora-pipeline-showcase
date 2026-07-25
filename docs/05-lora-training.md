@@ -1,154 +1,130 @@
-# LoRA Training Workflow
+# LoRA training workflow
 
-This document describes the LoRA training workflow used for FLUX2DEV.
+LoRA training was executed with
+[`ostris/ai-toolkit`](https://github.com/ostris/ai-toolkit). AI-Toolkit provides
+the trainer; this repository provides sanitized configuration, experiment
+operation, evidence extraction, failure analysis, and evaluation guidance.
 
-The training was performed with [AI-Toolkit](https://github.com/ostris/ai-toolkit), using FLUX2DEV as the base model.
-
-## Training Summary
+## Audited evidence
 
 | Item | Value |
 |---|---|
-| Training framework | AI-Toolkit |
-| Base model | FLUX2DEV |
-| Base model file | `flux2_dev.safetensors` |
-| Dataset size | approximately 20-35 images |
-| Captions | `.txt` sidecar files |
-| Training time | around 6-7 hours |
-| Main issue | memory pressure / OOM |
-| Main fix | custom training config and memory balancing |
-| LoRA weights | not published |
+| Base-model families | FLUX.1-dev and FLUX.2-dev |
+| Sanitized configuration records | 7 |
+| Available local logs | 4 |
+| Private datasets | 4 |
+| Image files / caption files | 98 / 98 |
+| Correctly matched pairs | 97 (one image and one caption were unmatched) |
+| Local LoRA checkpoint files | 23 |
+| Local validation images | 56 |
+| Public model/adapter weights | none |
 
-## Configuration Philosophy
+One FLUX.1-dev run has unambiguous completion evidence:
 
-The training config is presented as a working experiment baseline, not as a universal recipe.
+| Setting/observation | Value |
+|---|---:|
+| Dataset | 32 images, 31 matched caption sidecars |
+| Resolution buckets | 768, 1024 |
+| LoRA rank/alpha | 32/32 |
+| Convolution rank/alpha | 16/16 |
+| Steps | 2250 |
+| Optimizer | `adamw8bit` |
+| Learning rate | `4e-4` |
+| Batch / accumulation | 1 / 1 |
+| Dtype | `bf16` |
+| Last progress event | `2249/2250` at `01:37:45` |
+| Last reported speed | `2.61 s/it` |
+| Last reported loss | `0.2902` |
+| Completion evidence | final checkpoint event after validation sampling |
 
-Exact low-level values changed during experiments. FLUX2DEV LoRA training is sensitive to the GPU, dataset size, captions/trigger words, target style and memory behavior of a particular run.
+The progress counter is zero-indexed: the last optimization event appears as
+`2249/2250`. The log then records four validation generations and an unnumbered
+final checkpoint.
 
-This repository documents:
+One image in the historical training directory did not have a same-stem
+caption; a differently named caption was also present. AI-Toolkit could fall
+back to the configured trigger/default behavior, but the exact per-item effect
+is not reconstructed. This is recorded as a data-quality limitation.
 
-- the structure of a working local training setup;
-- the memory strategy used to make training stable enough;
-- the types of settings that mattered;
-- the result comparison process.
+See [`experiments/README.md`](../experiments/README.md) for every run and the
+conservative status rules.
 
-It does not claim that the same values are optimal for every dataset or machine.
-
-## Why Training Needed Custom Tuning
-
-FLUX2DEV is a heavy local training workload.
-
-During LoRA training, memory pressure can appear during:
-
-- forward pass;
-- attention calculation;
-- latent caching;
-- optimizer updates;
-- higher resolution batches;
-- longer training sessions.
-
-In this project, the training pipeline had to be stabilized manually instead of relying only on default presets.
-
-## Training Pipeline
+## Pipeline
 
 ```mermaid
 flowchart LR
-    Dataset["Prepared Dataset"] --> Captions["Captions / Trigger Words"]
-    Captions --> Config["AI-Toolkit Training Config"]
-    Config --> Base["FLUX2DEV Base Model"]
-    Base --> Train["LoRA Training"]
-    Train --> Checkpoints["LoRA Checkpoints"]
-    Checkpoints --> Test["ComfyUI Inference Test"]
-    Test --> Results["Result Comparison"]
+    Rights["Rights/licensing review"] --> Data["Images + caption sidecars"]
+    Data --> Manifest["Versioned dataset manifest"]
+    Manifest --> Smoke["10–20-step smoke test"]
+    Smoke --> Train["AI-Toolkit LoRA training"]
+    Train --> Checkpoints["Immutable checkpoints"]
+    Checkpoints --> Evaluate["Fixed prompts + seeds in ComfyUI"]
+    Evaluate --> Report["Sanitized metrics + failure report"]
 ```
 
-Training config screenshot:
+## Public configuration
 
-![Training config](../screenshots/training-config.png)
+- [`configs/ai-toolkit-flux1dev-lora.example.yml`](../configs/ai-toolkit-flux1dev-lora.example.yml)
+  is shaped from the completed FLUX.1 run. Paths, identity, trigger token, and
+  prompts are sanitized; seed walking is disabled for comparable validation.
+- [`configs/ai-toolkit-flux2dev-lora.example.yml`](../configs/ai-toolkit-flux2dev-lora.example.yml)
+  is informed by historical FLUX.2 attempts. The local audit does not contain a
+  clean, complete FLUX.2 log, so run a smoke test and do not call it universally
+  proven.
 
-Training log capture:
+## What historical runs showed
 
-![Training logs](../screenshots/training-logs.png)
+Three available logs ended in CUDA OOM before the first reported training step:
 
-## Configuration Areas
+- two during transformer quantization;
+- one after model/VAE loading during model preparation.
 
-The table below shows one working local training baseline extracted from the sanitized config example.
+Three other run folders retain numbered checkpoints but no complete log or final
+adapter. One folder contains a final adapter and an OOM log that likely belong
+to different attempts/retries. This is why run folders must use immutable IDs
+and why checkpoint presence alone is not treated as completion.
 
-| Setting | Value |
-|---|---|
-| LoRA rank | 16 |
-| LoRA alpha | 16 |
-| Optimizer | `adamw8bit` |
-| Learning rate | `0.0001` |
-| Batch size | 1 |
-| Gradient accumulation | 1 |
-| Resolution | 768 |
-| Steps | 1800 |
-| Training dtype | `bf16` |
-| Noise scheduler | `flowmatch` |
-| Gradient checkpointing | enabled |
-| Text encoder training | disabled |
-| Quantization | enabled for model/text encoder in the training config |
-| Low VRAM mode | enabled |
-| Layer offloading | enabled |
+See [failure modes](09-failure-modes.md) for the triage order.
 
-Public config:
+## Safe experiment operation
 
-```text
-configs/ai-toolkit-flux2dev-lora.example.yml
-```
+1. Validate the dataset manifest and rights.
+2. Copy the final config into a new immutable run directory.
+3. Record AI-Toolkit revision, Python packages, GPU, and driver.
+4. Run a 10–20-step smoke test at the intended resolution.
+5. Keep prompt IDs and validation seeds fixed.
+6. Preserve the raw log privately.
+7. Generate a path-free report with `scripts/parse_training_log.py`.
+8. Record failures and partial checkpoints instead of deleting them.
 
-These values came from a working config used locally. Other datasets and hardware may require different values.
+## Evaluation
 
-## Main Training Problems
+Training loss is useful for diagnosing optimization, but it is not a perceptual
+quality metric. Compare checkpoints with:
 
-| Problem | Description |
-|---|---|
-| OOM | Training crashed when memory pressure exceeded available VRAM |
-| Instability | Some configs were not stable across longer runs |
-| Slow iteration | Failed runs increased the time needed to find a working config |
-| Dataset sensitivity | Small datasets require careful filtering and trigger-word control |
+- held-out compositions;
+- fixed prompts and seeds;
+- subject fidelity;
+- prompt adherence;
+- anatomy/geometry;
+- background leakage;
+- visible artifacts;
+- blinded review when making a comparative claim.
 
-## Stabilization Work
+The repository does not distribute the historical generated images. Its SVGs
+are illustrative protocol diagrams only. Future experiments should use
+[`configs/controlled-study.example.yml`](../configs/controlled-study.example.yml)
+before using the term “ablation”.
 
-The training workflow was stabilized through:
+## Not published
 
-- custom config tuning;
-- memory balancing;
-- reduced unnecessary memory pressure;
-- FP8-related optimization where applicable;
-- dataset cleanup;
-- testing intermediate LoRA outputs;
-- adjusting trigger words per target.
+- base-model files;
+- LoRA weights and optimizer states;
+- source photographs and private captions;
+- cached latents;
+- raw logs containing paths/identifiers;
+- generated images without explicit release rights and complete run metadata;
+- tokens, local databases, and machine-specific state.
 
-## Testing LoRA During Training
-
-The trained LoRA was tested inside the ComfyUI inference workflow.
-
-Testing focused on:
-
-- identity/style consistency;
-- detail retention;
-- texture quality;
-- prompt accuracy;
-- artifact reduction;
-- LoRA strength behavior.
-
-## What Is Not Published
-
-The repository does not publish:
-
-- final LoRA weights;
-- private model files;
-- unsafe training assets;
-- private local paths;
-- full machine-specific config.
-
-## Result Evidence
-
-The training workflow is evaluated through:
-
-- training logs where available;
-- intermediate samples;
-- base FLUX2DEV vs trained LoRA comparison;
-- final result grid;
-- notes about artifacts, consistency and prompt alignment.
+See the [model card](MODEL_CARD.md), [data card](DATA_CARD.md), and
+[attribution](ATTRIBUTION.md) for license boundaries.

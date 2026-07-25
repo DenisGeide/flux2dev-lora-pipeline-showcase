@@ -1,0 +1,37 @@
+{
+  "$schema": "./dataset-manifest.schema.json",
+  "schema_version": "1.0",
+  "dataset_id": "synthetic-example-subject-v1",
+  "version": "1.0.0",
+  "description": "Two placeholder records showing the expected image/caption sidecar layout. The referenced files are examples and are not distributed.",
+  "license": "CC0-1.0",
+  "rights": {
+    "basis": "Synthetic example records created only for documentation.",
+    "public_release_approved": true,
+    "contains_personal_data": false,
+    "notes": "Replace this example with a manifest for material you own or are licensed to redistribute."
+  },
+  "caption_strategy": "One UTF-8 .txt sidecar per image; a stable synthetic trigger token may be used.",
+  "items": [
+    {
+      "id": "example-001",
+      "image": "images/example-001.webp",
+      "caption": "captions/example-001.txt",
+      "split": "train",
+      "width": 768,
+      "height": 768,
+      "source": "synthetic",
+      "license": "CC0-1.0"
+    },
+    {
+      "id": "example-002",
+      "image": "images/example-002.webp",
+      "caption": "captions/example-002.txt",
+      "split": "validation",
+      "width": 768,
+      "height": 768,
+      "source": "synthetic",
+      "license": "CC0-1.0"
+    }
+  ]
+}

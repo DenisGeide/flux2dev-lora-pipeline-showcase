@@ -1,23 +1,24 @@
 # Results
 
-This folder contains extended result notes, comparison grids and output examples for the FLUX2DEV LoRA pipeline showcase.
+No generated model images or comparison grids are distributed here. Historical
+outputs remain local because source-image rights and exact prompt/seed/checkpoint
+provenance were not retained at the level required for public release.
 
-Primary result assets:
+Public evaluation documentation lives in
+[`docs/07-results.md`](../docs/07-results.md). Sanitized repo-native diagrams
+live in [`screenshots/`](../screenshots/); they are explicitly illustrative and
+are not model outputs.
 
-```text
-before-after-base-vs-lora.jpg
-final-results-grid.jpg
-result-notes.md
-```
+## Future result notes
 
-Main README images live in `screenshots/`. This folder is used for longer explanations, additional comparisons and experiment notes.
-
-## Result Notes
-
-Result notes focus on:
+A future versioned report should record:
 
 - prompt alignment;
 - detail retention;
 - texture quality;
 - consistency across repeated local tests;
-- artifacts reduced by dataset/config tuning.
+- visible artifacts;
+- prompt ID, seed, sampler, steps, guidance, resolution, model hash, and adapter
+  hash;
+- reviewer protocol and aggregate scores;
+- explicit redistribution approval for any published image.

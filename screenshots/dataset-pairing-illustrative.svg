@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Illustrative image and caption pairing</title>
+  <desc id="desc">A sanitized schematic showing synthetic filenames, a generic caption sidecar, and dataset manifest validation. No source photo or real training caption is shown.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071827"/>
+      <stop offset="1" stop-color="#14304a"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#67e8f9"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="560" rx="28" fill="url(#bg)"/>
+  <text x="60" y="66" fill="#f8fafc" font-family="Segoe UI,Arial,sans-serif" font-size="30" font-weight="700">Dataset pairing contract</text>
+  <text x="60" y="101" fill="#94a3b8" font-family="Segoe UI,Arial,sans-serif" font-size="17">SANITIZED ILLUSTRATION • SYNTHETIC LABELS • NO SOURCE PHOTOGRAPHS</text>
+
+  <rect x="62" y="154" width="290" height="260" rx="20" fill="#10273d" stroke="#38bdf8" stroke-width="2"/>
+  <text x="92" y="191" fill="#7dd3fc" font-family="Consolas,monospace" font-size="17">images/sample-001.webp</text>
+  <rect x="96" y="221" width="222" height="150" rx="14" fill="#172f49"/>
+  <circle cx="160" cy="296" r="44" fill="#22d3ee" opacity=".75"/>
+  <rect x="208" y="251" width="68" height="91" rx="10" fill="#8b5cf6" opacity=".78"/>
+  <path d="M111 354L160 313L204 343L251 286L303 354Z" fill="#34d399" opacity=".72"/>
+  <text x="207" y="397" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI,Arial,sans-serif" font-size="14">abstract placeholder geometry</text>
+
+  <rect x="455" y="154" width="290" height="260" rx="20" fill="#10273d" stroke="#a78bfa" stroke-width="2"/>
+  <text x="485" y="191" fill="#c4b5fd" font-family="Consolas,monospace" font-size="17">captions/sample-001.txt</text>
+  <rect x="489" y="221" width="222" height="150" rx="14" fill="#0b1a2c"/>
+  <text x="510" y="258" fill="#e2e8f0" font-family="Consolas,monospace" font-size="15">synthetic_object,</text>
+  <text x="510" y="286" fill="#e2e8f0" font-family="Consolas,monospace" font-size="15">abstract geometry,</text>
+  <text x="510" y="314" fill="#e2e8f0" font-family="Consolas,monospace" font-size="15">neutral background</text>
+  <text x="600" y="397" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI,Arial,sans-serif" font-size="14">generic example text only</text>
+
+  <rect x="848" y="154" width="290" height="260" rx="20" fill="#10273d" stroke="#2dd4bf" stroke-width="2"/>
+  <text x="878" y="191" fill="#5eead4" font-family="Consolas,monospace" font-size="17">manifest.json</text>
+  <g font-family="Segoe UI,Arial,sans-serif" font-size="16">
+    <text x="882" y="243" fill="#dbeafe">✓ same stem</text>
+    <text x="882" y="279" fill="#dbeafe">✓ relative paths</text>
+    <text x="882" y="315" fill="#dbeafe">✓ rights recorded</text>
+    <text x="882" y="351" fill="#dbeafe">✓ split recorded</text>
+  </g>
+
+  <g stroke="#67e8f9" stroke-width="4" fill="none" marker-end="url(#arrow)">
+    <path d="M352 285H447"/>
+    <path d="M745 285H840"/>
+  </g>
+
+  <rect x="62" y="462" width="1076" height="52" rx="13" fill="#0b1a2c" stroke="#334155"/>
+  <text x="600" y="494" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Arial,sans-serif" font-size="16">The public repository includes the schema and this diagram—not the audited private image/caption files.</text>
+</svg>

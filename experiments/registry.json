@@ -1,0 +1,335 @@
+{
+  "schema_version": "1.0",
+  "scope": {
+    "kind": "historical_observational_audit",
+    "controlled_ablation": false,
+    "privacy": "Run IDs and dataset IDs are sanitized. No personal target names, prompts, local paths, source images, weights, optimizer states, or raw logs are included."
+  },
+  "source_audit": {
+    "audited_at": "2026-07-25",
+    "configuration_files": 7,
+    "log_files": 4,
+    "datasets": 4,
+    "image_files": 98,
+    "caption_files": 98,
+    "matched_image_caption_pairs": 97,
+    "unmatched_image_files": 1,
+    "unmatched_caption_files": 1,
+    "checkpoint_files": 23,
+    "validation_images": 56
+  },
+  "framework": {
+    "name": "ostris/ai-toolkit",
+    "repository": "https://github.com/ostris/ai-toolkit",
+    "observed_revision": "35b1cde3cb7b0151a51bf8547bab0931fd57d72d",
+    "license": "MIT",
+    "trainer_authorship": "Third-party trainer. This repository contributes configuration, experiment operation, evidence extraction, documentation, and evaluation workflow."
+  },
+  "public_visuals": {
+    "artifacts": [
+      "screenshots/pipeline-overview-illustrative.svg",
+      "screenshots/dataset-pairing-illustrative.svg",
+      "screenshots/comfyui-workflow-illustrative.svg",
+      "screenshots/fixed-seed-evaluation-illustrative.svg",
+      "screenshots/evidence-status-illustrative.svg"
+    ],
+    "kind": "sanitized_repo_native_illustrations",
+    "model_outputs_included": false,
+    "provenance": "Original SVG diagrams made from text and geometric shapes for this repository. They explain the process and evidence rules; they are not source photographs, private workflow exports, real captions, or generated model outputs."
+  },
+  "runs": [
+    {
+      "id": "hist-flux1-001",
+      "base_model": "black-forest-labs/FLUX.1-dev",
+      "architecture": "flux",
+      "status": "completed",
+      "config": {
+        "dataset_id": "private-dataset-a",
+        "dataset_images": 32,
+        "matched_caption_pairs": 31,
+        "resolution": [
+          768,
+          1024
+        ],
+        "repeats": 10,
+        "steps": 2250,
+        "rank": 32,
+        "alpha": 32,
+        "conv_rank": 16,
+        "conv_alpha": 16,
+        "optimizer": "adamw8bit",
+        "learning_rate": 0.0004,
+        "batch_size": 1,
+        "gradient_accumulation": 1,
+        "dtype": "bf16",
+        "quantized": true,
+        "low_vram": false,
+        "gradient_checkpointing": true,
+        "seed": 42
+      },
+      "observed": {
+        "max_reported_step": 2249,
+        "target_steps": 2250,
+        "elapsed_seconds_at_last_progress": 5865,
+        "seconds_per_iteration_at_last_progress": 2.61,
+        "last_reported_loss": 0.2902,
+        "final_checkpoint_present": true,
+        "checkpoint_files": 5,
+        "validation_images": 56,
+        "note": "The progress log reaches 2249/2250 (zero-indexed display), then records four validation generations and a final checkpoint. This is the only locally audited run with unambiguous completion evidence."
+      },
+      "evidence": [
+        "full local log",
+        "final checkpoint",
+        "56 validation images"
+      ],
+      "public_artifacts": []
+    },
+    {
+      "id": "hist-flux2-002",
+      "base_model": "black-forest-labs/FLUX.2-dev",
+      "architecture": "flux2",
+      "status": "mixed_evidence",
+      "config": {
+        "dataset_id": "private-dataset-a",
+        "dataset_images": 32,
+        "matched_caption_pairs": 31,
+        "resolution": [
+          768
+        ],
+        "repeats": 10,
+        "steps": 1800,
+        "rank": 16,
+        "alpha": 16,
+        "conv_rank": 0,
+        "conv_alpha": 0,
+        "optimizer": "adamw8bit",
+        "learning_rate": 0.0001,
+        "batch_size": 1,
+        "gradient_accumulation": 1,
+        "dtype": "bf16",
+        "quantized": true,
+        "low_vram": true,
+        "gradient_checkpointing": true,
+        "seed": 42
+      },
+      "observed": {
+        "max_numbered_checkpoint_step": 1500,
+        "final_checkpoint_present": true,
+        "checkpoint_files": 5,
+        "available_log_status": "failed_oom_during_transformer_quantization",
+        "note": "A final adapter artifact and numbered checkpoints exist, while the currently available log records an OOM during a separate/retry model-load attempt. The evidence cannot safely be merged into a completion claim."
+      },
+      "evidence": [
+        "mixed local artifacts",
+        "OOM log",
+        "final adapter file"
+      ],
+      "public_artifacts": []
+    },
+    {
+      "id": "hist-flux2-003",
+      "base_model": "black-forest-labs/FLUX.2-dev",
+      "architecture": "flux2",
+      "status": "interrupted",
+      "config": {
+        "dataset_id": "private-dataset-b",
+        "dataset_images": 34,
+        "matched_caption_pairs": 34,
+        "resolution": [
+          768
+        ],
+        "repeats": 20,
+        "steps": 3000,
+        "rank": 32,
+        "alpha": 32,
+        "conv_rank": 0,
+        "conv_alpha": 0,
+        "optimizer": "adamw8bit",
+        "learning_rate": 0.00005,
+        "batch_size": 1,
+        "gradient_accumulation": 1,
+        "dtype": "bf16",
+        "quantized": true,
+        "low_vram": true,
+        "gradient_checkpointing": true,
+        "seed": null
+      },
+      "observed": {
+        "max_numbered_checkpoint_step": 2000,
+        "final_checkpoint_present": false,
+        "checkpoint_files": 4,
+        "note": "Four numbered checkpoints are present through step 2000 of 3000, but no log or final adapter artifact remains. The stop reason is unknown."
+      },
+      "evidence": [
+        "sanitized config",
+        "numbered checkpoints"
+      ],
+      "public_artifacts": []
+    },
+    {
+      "id": "hist-flux2-004",
+      "base_model": "black-forest-labs/FLUX.2-dev",
+      "architecture": "flux2",
+      "status": "interrupted",
+      "config": {
+        "dataset_id": "private-dataset-c",
+        "dataset_images": 16,
+        "matched_caption_pairs": 16,
+        "resolution": [
+          768
+        ],
+        "repeats": 10,
+        "steps": 1000,
+        "rank": 16,
+        "alpha": 16,
+        "conv_rank": 0,
+        "conv_alpha": 0,
+        "optimizer": "adamw8bit",
+        "learning_rate": 0.0001,
+        "batch_size": 1,
+        "gradient_accumulation": 1,
+        "dtype": "bf16",
+        "quantized": true,
+        "low_vram": true,
+        "gradient_checkpointing": true,
+        "seed": null
+      },
+      "observed": {
+        "max_numbered_checkpoint_step": 800,
+        "final_checkpoint_present": false,
+        "checkpoint_files": 4,
+        "note": "Numbered checkpoints are present through step 800 of 1000; no final adapter artifact or complete log remains."
+      },
+      "evidence": [
+        "sanitized config",
+        "numbered checkpoints"
+      ],
+      "public_artifacts": []
+    },
+    {
+      "id": "hist-flux2-005",
+      "base_model": "black-forest-labs/FLUX.2-dev",
+      "architecture": "flux2",
+      "status": "interrupted",
+      "config": {
+        "dataset_id": "private-dataset-d",
+        "dataset_images": 16,
+        "matched_caption_pairs": 16,
+        "resolution": [
+          768
+        ],
+        "repeats": 10,
+        "steps": 1200,
+        "rank": 16,
+        "alpha": 16,
+        "conv_rank": 0,
+        "conv_alpha": 0,
+        "optimizer": "adamw8bit",
+        "learning_rate": 0.0001,
+        "batch_size": 1,
+        "gradient_accumulation": 1,
+        "dtype": "bf16",
+        "quantized": true,
+        "low_vram": true,
+        "gradient_checkpointing": true,
+        "seed": null
+      },
+      "observed": {
+        "max_numbered_checkpoint_step": 1000,
+        "final_checkpoint_present": false,
+        "checkpoint_files": 5,
+        "note": "Numbered checkpoints are present through step 1000 of 1200; no final adapter artifact or complete log remains."
+      },
+      "evidence": [
+        "sanitized config",
+        "numbered checkpoints"
+      ],
+      "public_artifacts": []
+    },
+    {
+      "id": "hist-flux2-006",
+      "base_model": "black-forest-labs/FLUX.2-dev",
+      "architecture": "flux2",
+      "status": "failed_oom",
+      "config": {
+        "dataset_id": "private-dataset-a",
+        "dataset_images": 32,
+        "matched_caption_pairs": 31,
+        "resolution": [
+          768
+        ],
+        "repeats": 1,
+        "steps": 1800,
+        "rank": 16,
+        "alpha": 16,
+        "conv_rank": 0,
+        "conv_alpha": 0,
+        "optimizer": "adamw8bit",
+        "learning_rate": 0.0001,
+        "batch_size": 1,
+        "gradient_accumulation": 1,
+        "dtype": "bf16",
+        "quantized": false,
+        "low_vram": false,
+        "gradient_checkpointing": true,
+        "seed": 42
+      },
+      "observed": {
+        "max_reported_step": null,
+        "final_checkpoint_present": false,
+        "checkpoint_files": 0,
+        "failure_stage": "model_preparation",
+        "note": "The model and VAE loaded, then CUDA OOM occurred during model preparation before a training step was reported."
+      },
+      "evidence": [
+        "full local OOM log",
+        "sanitized config"
+      ],
+      "public_artifacts": []
+    },
+    {
+      "id": "hist-flux2-007",
+      "base_model": "black-forest-labs/FLUX.2-dev",
+      "architecture": "flux2",
+      "status": "failed_oom",
+      "config": {
+        "dataset_id": "private-dataset-a",
+        "dataset_images": 32,
+        "matched_caption_pairs": 31,
+        "resolution": [
+          512,
+          768,
+          1024
+        ],
+        "repeats": 1,
+        "steps": 3000,
+        "rank": 32,
+        "alpha": 32,
+        "conv_rank": 16,
+        "conv_alpha": 16,
+        "optimizer": "adamw8bit",
+        "learning_rate": 0.0001,
+        "batch_size": 1,
+        "gradient_accumulation": 1,
+        "dtype": "bf16",
+        "quantized": true,
+        "low_vram": true,
+        "gradient_checkpointing": true,
+        "seed": 42
+      },
+      "observed": {
+        "max_reported_step": null,
+        "final_checkpoint_present": false,
+        "checkpoint_files": 0,
+        "failure_stage": "transformer_quantization",
+        "note": "CUDA OOM occurred while quantizing transformer blocks, before the first training step."
+      },
+      "evidence": [
+        "full local OOM log",
+        "sanitized config"
+      ],
+      "public_artifacts": []
+    }
+  ]
+}

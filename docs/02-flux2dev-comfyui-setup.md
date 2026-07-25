@@ -74,7 +74,11 @@ configs/comfyui-workflow.example.json
 
 The file describes the expected public workflow structure. A full ComfyUI export can be added later if it is sanitized and does not contain private local paths, paid asset links or machine-specific values.
 
-![ComfyUI workflow overview](../screenshots/comfyui-workflow-overview.png)
+![Sanitized illustrative ComfyUI workflow](../screenshots/comfyui-workflow-illustrative.svg)
+
+This repo-native SVG is an illustrative node map, not the original ComfyUI
+export or a model output. It intentionally contains no local paths, prompts,
+generated images, or machine-specific node state.
 
 ## 5. First Generation Check
 

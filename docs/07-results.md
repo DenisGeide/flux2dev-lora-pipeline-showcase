@@ -1,40 +1,53 @@
-# Results
+# Evaluation and result reporting
 
-This page shows the visible outcome of the FLUX2DEV LoRA experiments and connects the final images with the engineering work described in the earlier documents.
+Historical generated images are not distributed in this repository. Their
+source-image rights and exact run-to-image mapping were not documented well
+enough for a responsible public release or a controlled matched-seed claim.
+The registry therefore publishes aggregate counts and conservative run status,
+while the diagrams below explain how future results should be evaluated.
 
-The goal of the result section is simple: show the difference between the base FLUX2DEV output and the trained LoRA output, then show several final generations produced through the stabilized local workflow.
+## Fixed-seed comparison
 
-## Base FLUX2DEV vs Trained LoRA
+![Sanitized illustrative fixed-seed evaluation](../screenshots/fixed-seed-evaluation-illustrative.svg)
 
-![Base FLUX2DEV vs trained LoRA](../screenshots/before-after-base-vs-lora.jpg)
+This repo-native SVG contains placeholder panels only. It is not a base-model
+image, an adapter output, or a public result grid.
 
-This comparison demonstrates the practical purpose of the pipeline: the base model is used as the starting point, while the trained LoRA is evaluated for consistency, prompt alignment, detail retention and artifact reduction.
+## Evidence-driven status
 
-## Final Result Grid
+![Sanitized illustrative evidence status matrix](../screenshots/evidence-status-illustrative.svg)
 
-![Final result grid](../screenshots/final-results-grid.jpg)
+This schematic explains how the repository maps surviving logs and checkpoints
+to `completed`, `interrupted`, `failed_oom`, or `mixed_evidence`. It does not
+replace the machine-readable [experiment registry](../experiments/registry.json).
 
-The result grid is used as a quick visual summary of the final local workflow. It shows multiple generations from the same optimized setup instead of relying on a single best image.
+## Evaluation focus
 
-## Evaluation Focus
-
-The results are evaluated through engineering-oriented criteria:
+Future generated results should be evaluated through engineering-oriented
+criteria:
 
 - prompt alignment;
 - detail retention;
 - texture quality;
 - visual consistency;
-- artifact reduction;
+- visible artifacts;
 - stable behavior across repeated local tests.
 
-## Result Context
+## Result context
 
-The exact generation settings changed during experiments. The repository therefore treats results as outputs of a tuned local pipeline, not as proof that one fixed sampler/configuration is universally optimal.
+The exact generation settings changed during historical experiments. The
+repository therefore does not publish those images as proof that one
+sampler/configuration is optimal.
 
-The important part is the repeatable workflow:
+The repeatable workflow is:
 
-1. prepare and clean the dataset;
+1. prepare and clean a licensed dataset;
 2. train LoRA through AI-Toolkit;
 3. test LoRA inside the ComfyUI workflow;
-4. compare base output against LoRA output;
-5. keep the configuration stable enough for repeated local evaluation.
+4. compare base output against LoRA output locally;
+5. keep the configuration stable enough for repeated evaluation;
+6. publish images only when rights and run provenance are explicit.
+
+Future runs should preserve model/checkpoint hash, prompt ID, seed, sampler, and
+generation settings with every image. See the
+[controlled-study protocol](../configs/controlled-study.example.yml).

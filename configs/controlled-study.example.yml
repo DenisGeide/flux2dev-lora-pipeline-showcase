@@ -1,0 +1,56 @@
+# Experiment protocol metadata used alongside one AI-Toolkit config per run.
+# This file is not consumed by AI-Toolkit. It records what must remain fixed
+# before a group of runs can be called a controlled comparison.
+
+study:
+  id: flux-lora-rank-study-v1
+  hypothesis: "Changing LoRA rank affects subject fidelity and artifact rate."
+  status: planned
+  controlled_ablation: true
+
+fixed:
+  base_model: black-forest-labs/FLUX.1-dev
+  dataset_manifest: data/my-public-dataset.manifest.json
+  dataset_version: "1.0.0"
+  train_validation_split: fixed
+  resolution:
+    - 768
+    - 1024
+  optimizer: adamw8bit
+  learning_rate: 0.0001
+  steps: 1500
+  batch_size: 1
+  gradient_accumulation: 1
+  seed: 42
+  validation_prompts: fixed
+  validation_seeds:
+    - 101
+    - 202
+    - 303
+  hardware: fixed
+  software_revision: fixed
+
+variable:
+  name: lora_rank
+  values:
+    - 8
+    - 16
+    - 32
+
+evaluation:
+  record:
+    - training_loss_curve
+    - wall_clock_seconds
+    - median_seconds_per_iteration
+    - peak_vram_mib
+    - checkpoint_size_bytes
+    - prompt_suite_outputs
+  qualitative_rubric:
+    - subject_fidelity
+    - prompt_adherence
+    - anatomy_and_geometry
+    - background_leakage
+    - visible_artifacts
+  review:
+    blind_to_run_id: true
+    minimum_reviewers: 2

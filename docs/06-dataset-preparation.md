@@ -8,12 +8,13 @@ The exact dataset can vary depending on the LoRA target, but the general prepara
 
 | Item | Value |
 |---|---|
-| Dataset size | approximately 20-35 images |
+| Historical dataset sizes | 16, 16, 32, and 34 images |
+| Sidecar audit | 97 matched pairs; 1 unmatched image and 1 unmatched caption |
 | Editing tool | Photoshop |
 | Captions | `.txt` sidecar files next to images |
 | Trigger words | selected per LoRA target |
 | Validation | manual visual validation through sample generations |
-| Public dataset examples | safe/owned images only |
+| Public dataset files | not included; schema and synthetic manifest example only |
 
 ## Preparation Flow
 
@@ -68,11 +69,11 @@ Captioning strategy can vary per dataset.
 
 In this project, captions were stored as `.txt` sidecar files next to the images, and trigger words were selected per LoRA target.
 
-Safe example:
+Safe synthetic example:
 
 ```text
-trigger_word: example_trigger
-caption example: portrait photo of example_trigger, cinematic lighting, realistic detail
+trigger_word: synthetic_object
+caption example: synthetic_object, abstract geometry, neutral background
 ```
 
 Example folder structure:
@@ -86,7 +87,8 @@ dataset/
 +-- ...
 ```
 
-For public examples, `example_trigger` is used as a safe placeholder. Replace it with the target trigger word in a real private/local training run.
+For public examples, `synthetic_object_token` is used as a safe placeholder.
+Replace it with the target trigger word in a real private/local training run.
 
 ## 5. Training-Ready Dataset
 
@@ -98,15 +100,31 @@ Before training, the dataset was checked for:
 - no private/copyright-sensitive files in the public examples;
 - no local metadata that should remain private.
 
-![Dataset preview](../screenshots/dataset-preview.png)
+![Sanitized illustrative image-caption pairing](../screenshots/dataset-pairing-illustrative.svg)
 
-Caption/trigger example:
+The SVG is a repo-native schematic made from geometric shapes and synthetic
+labels. It does not show a source photograph, a real caption, or a generated
+model output.
 
-![Caption example](../screenshots/caption-example.png)
+## Manifest and validation
 
-## Public Dataset Note
+Document every released record with
+[`data/dataset-manifest.schema.json`](../data/dataset-manifest.schema.json) and
+validate it before training:
 
-The public dataset examples are limited to safe showcase material. Private source images, copyrighted references, sensitive personal data, hidden metadata and local folder paths are outside the scope of this repository.
+```bash
+python scripts/validate_dataset_manifest.py path/to/manifest.json \
+  --dataset-root path/to/dataset
+```
+
+The manifest captures rights, license, split, relative paths, dimensions, and
+optional hashes. See the complete [data card](DATA_CARD.md).
+
+## Public dataset note
+
+The diagram illustrates preparation, but it is not a redistributable training
+corpus. Private source images, captions, sensitive personal data, hidden
+metadata, and local folder paths remain outside this repository.
 
 ## Dataset Quality Notes
 

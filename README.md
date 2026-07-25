@@ -1,321 +1,279 @@
-# FLUX2DEV LoRA Pipeline Showcase
+# FLUX LoRA Lab
 
-Local FLUX2DEV inference and LoRA training showcase focused on ComfyUI workflow adaptation, memory optimization, dataset preparation and reproducible local generative AI experimentation.
+**Reproducible local FLUX.1/FLUX.2 LoRA experimentation, failure analysis, and
+ComfyUI evaluation.**
 
-> Engineering case study: running and tuning a heavy FLUX2DEV workflow locally, with a focus on VRAM pressure, OOM mitigation, LoRA training stability and before/after result comparison.
+[![quality](https://github.com/DenisGeide/flux2dev-lora-pipeline-showcase/actions/workflows/quality.yml/badge.svg)](https://github.com/DenisGeide/flux2dev-lora-pipeline-showcase/actions/workflows/quality.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![trainer: AI--Toolkit](https://img.shields.io/badge/trainer-ostris%2Fai--toolkit-blue.svg)](https://github.com/ostris/ai-toolkit)
 
-> This repository is a public technical showcase/tutorial. It documents the engineering process, not a full model release.  
-> Model weights, LoRA weights, paid model files, private paths, secrets and unsafe training assets are not included.
+This repository turns a private local training workspace into a safe public
+engineering case study. It includes sanitized configurations, an auditable
+experiment registry, dataset-manifest tooling, a path-free log parser,
+reproducibility notes, failure modes, and repo-native illustrative diagrams.
 
-## What Is This
+> The trainer is [`ostris/ai-toolkit`](https://github.com/ostris/ai-toolkit);
+> this repository does not claim that third-party training loop as original
+> code. Base models, source photographs, captions, LoRA weights, cached latents,
+> optimizer states, raw logs, generated images, and secrets are not distributed.
+> Every workflow/result diagram is explicitly illustrative and is not a model
+> output or a private workflow export.
 
-This project documents how I ran FLUX2DEV locally through ComfyUI and trained LoRA experiments for FLUX2DEV with AI-Toolkit.
+![Sanitized illustrative pipeline](screenshots/pipeline-overview-illustrative.svg)
 
-The goal was not just to generate images. The goal was to build a local workflow that is understandable, repeatable and stable enough for heavier inference and LoRA training experiments without relying on cloud GPU servers.
+## What this demonstrates
 
-The repository has two main parts:
+- local FLUX.1-dev and FLUX.2-dev LoRA experiment operation;
+- AI-Toolkit configuration, checkpointing, quantization, and offloading;
+- ComfyUI inference and fixed-prompt adapter evaluation;
+- dataset curation with image/caption sidecars;
+- conservative reconstruction of completed, failed, interrupted, and mixed runs;
+- automatic extraction of path-free metrics from private logs;
+- a reproducible protocol for future controlled comparisons;
+- CUDA OOM investigation without hiding failed runs.
 
-1. **FLUX2DEV inference pipeline**  
-   ComfyUI setup, model placement, text encoder/VAE setup, workflow structure, sampler/guidance behavior and local memory constraints.
+## Verified local evidence
 
-2. **FLUX2DEV LoRA training pipeline**  
-   AI-Toolkit setup, dataset preparation, training configuration, OOM/crash mitigation, testing workflow and before/after result comparison.
+The public registry was reconstructed from the local workspace on
+`2026-07-25`:
 
-## Why FLUX2DEV Is Hard Locally
+| Evidence | Audited count |
+|---|---:|
+| Configuration records | 7 |
+| Available logs | 4 |
+| Curated datasets | 4 |
+| Image files / caption files | 98 / 98 |
+| Correctly matched image/caption pairs | 97 |
+| Unmatched image / caption files | 1 / 1 |
+| LoRA checkpoint files | 23 |
+| Local validation generations (count only) | 56 |
 
-FLUX2DEV is a heavy local workload. Running it is not just a "download model and click generate" task when the goal is stable high-load generation and LoRA training.
+One FLUX.1-dev run has a complete log, terminal checkpoint, and validation
+outputs:
 
-The main pain points:
+| Base | Dataset | Steps | Rank/alpha | LR | Last progress | Speed |
+|---|---:|---:|---:|---:|---:|---:|
+| `FLUX.1-dev` | 32 images, 31 matched captions | 2250 | 32/32 | `4e-4` | `2249/2250` at `01:37:45` | `2.61 s/it` |
 
-- high VRAM pressure;
-- OOM crashes during heavier experiments;
-- memory fragmentation during longer sessions;
-- unstable training configs;
-- expensive iteration time when runs crash;
-- sensitivity to sampler/guidance/noise settings;
-- dataset quality strongly affecting LoRA results.
+AI-Toolkit displays the final optimization step as `2249/2250`; the following
+log events record four validation generations and an unnumbered final
+checkpoint. The last reported training loss was `0.2902`. It is a single
+historical observation, not a benchmark.
 
-This showcase focuses on the engineering work around those problems: workflow adaptation, memory routing, training config tuning and repeatable evaluation.
+The audit also found one image/caption filename mismatch in that historical
+dataset. It is retained as a data-quality finding; future runs should correct
+the sidecar name and validate the manifest before training.
 
-## What This Project Demonstrates
+The FLUX.2 records include partial checkpoints, pre-training OOM failures, and
+one run folder where artifacts and the surviving retry log conflict. They are
+reported without promoting them to completed experiments.
 
-- Local FLUX2DEV setup through ComfyUI.
-- Adapted node-based inference workflow.
-- Practical VRAM/RAM balancing for heavy local generation.
-- OOM/crash debugging and stabilization.
-- AI-Toolkit LoRA training workflow.
-- Dataset preparation for LoRA training.
-- Before/after comparison between base FLUX2DEV and trained LoRA.
-- Documentation of a local GenAI workflow in a way another engineer can follow.
+See the full [historical experiment registry](experiments/README.md) and its
+machine-readable [source](experiments/registry.json).
 
-## Key Metrics
+## Start here
 
-These values describe one working local experiment configuration, not a universal recipe.
+Choose the path that matches your goal:
 
-Exact low-level settings changed during experiments depending on memory pressure, dataset behavior and output quality. This repository focuses on the final workflow structure, memory strategy and reproducible setup notes rather than presenting one fixed "perfect" config.
-
-| Metric | Value |
+| Goal | Read/run |
 |---|---|
-| Base model | `flux2_dev.safetensors` |
-| VAE | `flux2_vae.safetensors` |
-| Runtime | ComfyUI |
-| Launch method | `run_nvidia_gpu.bat` |
-| Training framework | AI-Toolkit |
-| CPU | AMD Ryzen 9 9950X3D |
-| RAM | 128 GB |
-| VRAM | 33 GB |
-| OS | Windows 11 LTSC 24H2 |
-| Dataset size | 20-35 images |
-| Captions | `.txt` sidecar files |
-| Training time | around 6-7 hours |
-| Text encoder | `mistral_3.1_small_flux2_fp8.safetensors` |
-| Training resolution | 768 |
-| Training steps | 1800 |
-| LoRA rank/alpha | 16 / 16 |
-| Optimizer | `adamw8bit` |
-| Learning rate | `0.0001` |
-| Batch size | 1 |
-| Gradient accumulation | 1 |
-| Gradient checkpointing | enabled |
-| Training dtype | `bf16` |
-| Training noise scheduler | `flowmatch` |
-| Sample size | 768x768 |
-| Sample steps | 20 |
-| Sample guidance | 1 |
-| Training speed | varied by configuration and was monitored locally |
+| Understand the evidence | [`experiments/README.md`](experiments/README.md) |
+| Prepare your own legal dataset | [`data/README.md`](data/README.md) |
+| Run a FLUX.1 baseline | [`configs/ai-toolkit-flux1dev-lora.example.yml`](configs/ai-toolkit-flux1dev-lora.example.yml) |
+| Run a FLUX.2 smoke test/baseline | [`configs/ai-toolkit-flux2dev-lora.example.yml`](configs/ai-toolkit-flux2dev-lora.example.yml) |
+| Reproduce the workflow | [`docs/08-reproducibility.md`](docs/08-reproducibility.md) |
+| Diagnose a failed run | [`docs/09-failure-modes.md`](docs/09-failure-modes.md) |
+| Review data/model boundaries | [`docs/DATA_CARD.md`](docs/DATA_CARD.md), [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md) |
 
-## Engineering Challenges
+## Quick start
 
-| Challenge | What Happened | How It Was Addressed |
-|---|---|---|
-| CUDA/OOM crashes | Heavy FLUX2DEV runs exceeded stable local memory limits | custom config tuning, offloading and memory balancing |
-| VRAM pressure | The workflow pushed GPU memory hard during inference/training | node-level workflow adjustments and VRAM/RAM balancing |
-| Training instability | Default-style configs were not stable enough for longer LoRA experiments | custom AI-Toolkit config and repeated test runs |
-| Slow iteration | Failed runs made experimentation expensive in time | more stable baseline config and smaller validation loop |
-| Output artifacts | Some settings produced weaker details or unstable outputs | sampler/guidance/noise tuning and dataset cleanup |
-| Dataset sensitivity | Small LoRA datasets can overfit or introduce artifacts quickly | manual filtering, Photoshop cleanup and trigger-word control |
+The repository tooling uses only the Python standard library:
 
-Full notes: [docs/04-optimization-notes.md](docs/04-optimization-notes.md)
+```bash
+git clone https://github.com/DenisGeide/flux2dev-lora-pipeline-showcase.git
+cd flux2dev-lora-pipeline-showcase
+python -m unittest discover -s tests -v
+python scripts/validate_dataset_manifest.py data/dataset-manifest.example.json
+python scripts/build_experiment_report.py --check
+```
 
-## Hardware Setup
+### 1. Prepare a dataset
 
-The pipeline was tested on a local GPU workstation.
+Copy [`data/dataset-manifest.example.json`](data/dataset-manifest.example.json),
+replace the synthetic records, and use a layout such as:
+
+```text
+my-dataset/
+|-- manifest.json
+|-- images/
+|   |-- subject-001.webp
+|   +-- subject-002.webp
++-- captions/
+    |-- subject-001.txt
+    +-- subject-002.txt
+```
+
+Validate metadata and files:
+
+```bash
+python scripts/validate_dataset_manifest.py my-dataset/manifest.json \
+  --dataset-root my-dataset
+```
+
+### 2. Configure AI-Toolkit
+
+Install [`ostris/ai-toolkit`](https://github.com/ostris/ai-toolkit) using its
+upstream instructions, obtain authorized access to the selected base model, and
+copy one public config into your private AI-Toolkit workspace.
+
+Replace:
+
+- `synthetic_object_token`;
+- `./datasets/synthetic-object`;
+- validation prompts;
+- output location if necessary.
+
+Run a 10–20-step smoke test before a long run. The historical failures show that
+model preparation and transformer quantization can OOM before the first
+optimization step.
+
+The upstream CLI pattern is:
+
+```bash
+python run.py path/to/your-config.yml
+```
+
+### 3. Extract a safe report
+
+Keep the raw trainer log private and generate a summary:
+
+```bash
+python scripts/parse_training_log.py path/to/log.txt \
+  --run-id public-run-001 \
+  --output reports/public-run-001.json \
+  --markdown-output reports/public-run-001.md \
+  --series-output reports/public-run-001.csv
+
+python scripts/build_loss_chart.py reports/public-run-001.csv \
+  --output reports/public-run-001-loss.svg \
+  --title "public-run-001 training loss"
+```
+
+The output contains status, progress, loss summary, median speed, checkpoint
+event counts, and OOM detection. It contains no raw lines, local paths, prompts,
+trigger words, or filenames.
+
+## Historical runs are not an ablation
+
+Dataset size, target, rank, learning rate, repeats, resolution, quantization,
+and memory settings changed between historical runs. The registry is valuable
+operational evidence, but it cannot show that one rank or learning rate caused
+better output.
+
+For a controlled comparison:
+
+1. freeze the base model, dataset manifest, split, prompts, seeds, hardware, and software revision;
+2. change one parameter;
+3. collect loss, wall time, iteration speed, peak VRAM, and fixed-seed outputs;
+4. review outputs blind to run ID;
+5. include failed runs in the report.
+
+Use [`configs/controlled-study.example.yml`](configs/controlled-study.example.yml)
+to record that protocol.
+
+## Inference workflow
+
+ComfyUI was used to load the base model, inject adapters, keep validation
+prompts/seeds repeatable, and compare checkpoints.
+
+![Sanitized illustrative ComfyUI workflow](screenshots/comfyui-workflow-illustrative.svg)
+
+The SVG above is a generic, repo-native explanation of the inference path. It
+is not a private ComfyUI export and it contains no prompts or generated images.
+
+The workstation used for the audited local experiments:
 
 | Component | Value |
 |---|---|
+| GPU | NVIDIA GeForce RTX 5090 (`32607 MiB` reported VRAM) |
 | CPU | AMD Ryzen 9 9950X3D |
-| RAM | 128 GB |
-| VRAM | 33 GB |
-| OS | Windows 11 LTSC 24H2 |
-| Runtime | ComfyUI |
-| Training framework | AI-Toolkit |
+| RAM | 128 GB class |
+| OS | Windows 11 Enterprise LTSC, build 26100 |
+| Trainer | AI-Toolkit |
+| Inference runtime | ComfyUI |
 
-![Hardware overview](screenshots/hardware-overview-sanitized.png)
+This is the observed environment, not a minimum requirement.
 
-Details: [docs/01-environment-and-hardware.md](docs/01-environment-and-hardware.md)
-
-## FLUX2DEV Inference Pipeline
-
-The inference workflow was based on a community FLUX2DEV workflow and then manually adapted for my local setup.
-
-Main areas of work:
-
-- model loading;
-- text encoder setup;
-- VAE configuration;
-- sampler chain tuning;
-- guidance configuration;
-- sigma/noise behavior;
-- memory routing;
-- high-resolution generation stability;
-- LoRA-ready testing path.
-
-![ComfyUI workflow overview](screenshots/comfyui-workflow-overview.png)
-
-Annotated workflow:
-
-![ComfyUI workflow annotated](screenshots/comfyui-workflow-annotated.png)
-
-The annotated view highlights:
-
-- model loading;
-- text encoder block;
-- guidance/CFG;
-- sampler chain;
-- sigma/noise logic;
-- VAE decode;
-- LoRA injection/testing path;
-- memory-sensitive nodes.
-
-Detailed pipeline breakdown: [docs/03-inference-pipeline.md](docs/03-inference-pipeline.md)
-
-## LoRA Training Pipeline
-
-LoRA training was performed with AI-Toolkit using FLUX2DEV as the base model.
-
-The main work was not only the training itself, but stabilizing the training pipeline under high memory pressure.
-
-Training notes:
-
-- training framework: AI-Toolkit;
-- dataset size: approximately 20-35 images;
-- training time: around 6-7 hours;
-- main issue: memory pressure / OOM;
-- main fix: custom training config and memory balancing;
-- LoRA weights are not published.
-
-The published config is treated as a working reference, not a universal preset. FLUX2DEV training settings usually need to be adjusted for the GPU, dataset, target style and stability of each run.
-
-Training config screenshot:
-
-![Training config](screenshots/training-config.png)
-
-Training log capture:
-
-![Training logs](screenshots/training-logs.png)
-
-Full training workflow: [docs/05-lora-training.md](docs/05-lora-training.md)
-
-## Dataset Preparation
-
-The dataset was prepared manually before training.
-
-Dataset preparation included:
-
-- selecting source images;
-- removing low-quality images;
-- cleaning/editing images in Photoshop;
-- keeping the dataset consistent;
-- preparing trigger words per LoRA target;
-- testing early generations and adjusting the dataset if needed.
-
-Dataset size:
+## Repository map
 
 ```text
-20-35 images
-```
-
-Dataset preview:
-
-![Dataset preview](screenshots/dataset-preview.png)
-
-Caption/trigger example:
-
-![Caption example](screenshots/caption-example.png)
-
-Dataset guide: [docs/06-dataset-preparation.md](docs/06-dataset-preparation.md)
-
-## Results: Base vs LoRA
-
-This is the most important visual section of the project. It shows why the engineering work mattered.
-
-Visual summary:
-
-| Base vs LoRA Comparison | Final Result Grid |
-|---|---|
-| <img src="screenshots/before-after-base-vs-lora.jpg" width="420"> | <img src="screenshots/final-results-grid.jpg" width="420"> |
-
-Result notes focus on:
-
-- prompt alignment;
-- consistency;
-- detail retention;
-- texture quality;
-- artifact reduction;
-- stability under repeated local testing.
-
-More results: [docs/07-results.md](docs/07-results.md)
-
-## Config Examples
-
-This repository includes public example configuration files. They are intentionally sanitized and omit private local paths and model assets.
-
-| File | Purpose |
-|---|---|
-| [configs/comfyui-workflow.example.json](configs/comfyui-workflow.example.json) | sanitized workflow descriptor for the public pipeline structure |
-| [configs/training-config.example.yml](configs/training-config.example.yml) | public training config template |
-| [configs/ai-toolkit-flux2dev-lora.example.yml](configs/ai-toolkit-flux2dev-lora.example.yml) | sanitized AI-Toolkit config based on one working local experiment |
-| [configs/dataset-notes.example.md](configs/dataset-notes.example.md) | dataset documentation template |
-
-## How To Read This Repository
-
-If you are new to FLUX2DEV/ComfyUI:
-
-1. Start with [docs/01-environment-and-hardware.md](docs/01-environment-and-hardware.md).
-2. Continue with [docs/02-flux2dev-comfyui-setup.md](docs/02-flux2dev-comfyui-setup.md).
-3. Read [docs/03-inference-pipeline.md](docs/03-inference-pipeline.md) to understand the workflow.
-4. Read [docs/05-lora-training.md](docs/05-lora-training.md) and [docs/06-dataset-preparation.md](docs/06-dataset-preparation.md) for the training side.
-5. Finish with [docs/07-results.md](docs/07-results.md).
-
-If you are reviewing this as a technical showcase, the most important sections are:
-
-- [docs/03-inference-pipeline.md](docs/03-inference-pipeline.md)
-- [docs/04-optimization-notes.md](docs/04-optimization-notes.md)
-- [docs/05-lora-training.md](docs/05-lora-training.md)
-- [docs/07-results.md](docs/07-results.md)
-
-## Repository Structure
-
-```text
-flux2dev-lora-pipeline-showcase/
-|-- README.md
-|-- docs/
-|   |-- 01-environment-and-hardware.md
-|   |-- 02-flux2dev-comfyui-setup.md
-|   |-- 03-inference-pipeline.md
-|   |-- 04-optimization-notes.md
-|   |-- 05-lora-training.md
-|   |-- 06-dataset-preparation.md
-|   +-- 07-results.md
+.
 |-- configs/
-|   |-- comfyui-workflow.example.json
+|   |-- ai-toolkit-flux1dev-lora.example.yml
 |   |-- ai-toolkit-flux2dev-lora.example.yml
-|   |-- training-config.example.yml
-|   +-- dataset-notes.example.md
-|-- screenshots/
-|   |-- comfyui-workflow-overview.png
-|   |-- comfyui-workflow-annotated.png
-|   |-- hardware-overview-sanitized.png
-|   |-- model-files.png
-|   |-- training-config.png
-|   |-- training-logs.png
-|   |-- dataset-preview.png
-|   |-- caption-example.png
-|   |-- before-after-base-vs-lora.jpg
-|   +-- final-results-grid.jpg
-|-- results/
+|   |-- controlled-study.example.yml
+|   +-- comfyui-workflow.example.json
+|-- data/
+|   |-- dataset-manifest.schema.json
+|   +-- dataset-manifest.example.json
+|-- experiments/
+|   |-- registry.json
 |   +-- README.md
+|-- scripts/
+|   |-- parse_training_log.py
+|   |-- build_experiment_report.py
+|   |-- build_loss_chart.py
+|   +-- validate_dataset_manifest.py
+|-- tests/
+|-- docs/
+|-- screenshots/
+|-- results/
 |-- LICENSE
-+-- .gitignore
++-- README.md
 ```
 
-## External References
+## Documentation
 
-- [FLUX.2 by Black Forest Labs](https://bfl.ai/models/flux2)
-- [ComfyUI GitHub](https://github.com/comfy-org/ComfyUI)
-- [ComfyUI official documentation](https://docs.comfy.org/)
-- [AI-Toolkit by Ostris](https://github.com/ostris/ai-toolkit)
+1. [Environment and hardware](docs/01-environment-and-hardware.md)
+2. [ComfyUI setup](docs/02-flux2dev-comfyui-setup.md)
+3. [Inference pipeline](docs/03-inference-pipeline.md)
+4. [Optimization notes](docs/04-optimization-notes.md)
+5. [LoRA training workflow](docs/05-lora-training.md)
+6. [Dataset preparation](docs/06-dataset-preparation.md)
+7. [Evaluation and result reporting](docs/07-results.md)
+8. [Reproducibility guide](docs/08-reproducibility.md)
+9. [Failure modes](docs/09-failure-modes.md)
+10. [Data card](docs/DATA_CARD.md)
+11. [Model/adapter card](docs/MODEL_CARD.md)
+12. [Attribution](docs/ATTRIBUTION.md)
 
-## Not Included
+## Public/private boundary
 
-This repository does not include:
+Included:
 
-- private model weights;
-- paid model files;
-- LoRA weights;
-- unsafe or non-public training assets;
-- private local paths;
-- machine-specific secrets;
-- API keys or tokens.
+- original documentation and public scripts;
+- sanitized YAML/JSON examples;
+- aggregate evidence and machine-readable run metadata;
+- sanitized, illustrative SVG diagrams;
+- the retained `model-files.png` setup screenshot, which contains no local path
+  or generated content.
 
-## Public Note
+Excluded by `.gitignore` and release policy:
 
-This is a public showcase/tutorial repository. Some implementation details are simplified or sanitized to avoid publishing private files, paid model assets, copyrighted material or machine-specific configuration.
+- source photographs and private captions;
+- `.safetensors`, `.ckpt`, `.pt`, `.pth`, `.bin`, and `.gguf`;
+- cached latents and optimizer states;
+- raw outputs and raw training logs;
+- generated validation images and comparison grids;
+- tokens, `.env` files, local databases, and machine-specific paths;
+- third-party base model files.
 
-The focus is on explaining the engineering process: setup, optimization, dataset preparation, training workflow and results.
+## Attribution and licenses
 
-## License
+The public code, configuration examples, and original documentation are
+available under the [MIT License](LICENSE).
 
-Documentation and example configuration files in this repository are released under the [MIT License](LICENSE).
-
-Model files, LoRA weights, private datasets, paid model assets and third-party assets are not included in this repository and are not covered by this license.
+AI-Toolkit, ComfyUI, FLUX models, datasets, and other third-party assets retain
+their own licenses and terms. Review [ATTRIBUTION.md](docs/ATTRIBUTION.md) for
+the exact boundary. The locally audited AI-Toolkit checkout was at revision
+`35b1cde3cb7b0151a51bf8547bab0931fd57d72d`.
